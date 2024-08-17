@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet Dashboard</title>
+    <style>
+        body {
+            background-color: #181818;
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #282828;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            display: flex;
+        }
+
+        .sidebar {
+            width: 200px;
+            padding: 20px;
+        }
+
+        .sidebar h2 {
+            margin-bottom: 20px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar li a {
+            display: block;
+            padding: 10px;
+            border-radius: 5px;
+            color: #fff;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar li a:hover {
+            background-color: #383838;
+        }
+
+        .main {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .main h2 {
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background-color: #383838;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card .icon {
+            display: flex;
+            align-items: center;
+        }
+
+        .card .icon img {
+            margin-right: 10px;
+        }
+
+        .card .value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .card .percentage {
+            font-size: 14px;
+            color: #777;
+        }
+
+        .chart-container {
+            height: 300px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .chart {
+            width: 100%;
+            height: 100%;
+            background-color: #282828;
+            border-radius: 10px;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .chart-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            width: 100%;
+            height: 2px;
+            background-color: #fff;
+            z-index: 1;
+        }
+
+        .chart-point {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #fff;
+            z-index: 2;
+        }
+
+        .chart-point.active {
+            background-color: #ffcc00;
+        }
+
+        .chart-label {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            color: #777;
+        }
+
+        .chart-label span {
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .table-container {
+            margin-bottom: 20px;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th,
+        .table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #383838;
+        }
+
+        .table th {
+            background-color: #383838;
+            font-weight: bold;
+        }
+
+        .table td:last-child {
+            text-align: right;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .table-header h3 {
+            margin: 0;
+        }
+
+        .table-header .filters {
+            display: flex;
+            align-items: center;
+        }
+
+        .table-header .filters button {
+            background-color: #383838;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            color: #fff;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        .table-header .filters button:hover {
+            background-color: #ffcc00;
+        }
+
+        .history-container {
+            background-color: #383838;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .history-container h3 {
+            margin-bottom: 10px;
+        }
+
+        .history-container p {
+            margin-bottom: 10px;
+        }
+
+        .history-container a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .history-container a:hover {
+            text-decoration: underline;
+        }
+
+        .history-container .icon {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .history-container .icon img {
+            margin-right: 10px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>Ghulam</h2>
+            <p>Product Designer</p>
+            <ul>
+                <li><a href="#"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="#"><i class="fas fa-wallet"></i> My Wallet</a></li>
+                <li><a href="#"><i class="fas fa-exchange-alt"></i> Transaction</a></li>
+                <li><a href="#"><i class="fas fa-coins"></i> Crypto</a></li>
+                <li><a href="#"><i class="fas fa-sync-alt"></i> Exchange</a></li>
+                <li><a href="#"><i class="fas fa-cog"></i> Setting</a></li>
+            </ul>
+            <div class="history-container">
+                <h3>History available</h3>
+                <p>Check your weekly transaction reports</p>
+                <div class="icon">
+                    <img src="https://www.flaticon.com/free-icons/history" alt="History Icon">
+                </div>
+            </div>
+        </div>
+        <div class="main">
+            <h2>Dashboard</h2>
+            <div class="card">
+                <div class="icon">
+                    <img src="https://www.flaticon.com/free-icons/bitcoin" alt="Bitcoin Icon">
+                </div>
+                <div>
+                    <div class="value">$1200</div>
+                    <div class="percentage">45% This week</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="icon">
+                    <img src="https://www.flaticon.com/free-icons/ethereum" alt="Ethereum Icon">
+                </div>
+                <div>
+                    <div class="value">$232,40</div>
+                    <div class="percentage">35% This week</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="icon">
+                    <img src="https://www.flaticon.com/free-icons/neo" alt="Neo Icon">
+                </div>
+                <div>
+                    <div class="value">600</div>
+                    <div class="percentage">21% This week</div>
+                </div>
+            </div>
+            <h2>Market Overview</h2>
+            <p>Prices value updates</p>
+            <div class="chart-container">
+                <div class="chart">
+                    <div class="chart-line"></div>
+                    <div class="chart-point" style="left: 10%;"></div>
+                    <div class="chart-point" style="left: 25%;"></div>
+                    <div class="chart-point" style="left: 40%;"></div>
+                    <div class="chart-point" style="left: 55%;"></div>
+                    <div class="chart-point" style="left: 70%;"></div>
+                    <div class="chart-point" style="left: 85%;"></div>
+                    <div class="chart-label">
+                        <span>Mon</span>
+                        <span>Tue</span>
+                        <span>Wed</span>
+                        <span>Thu</span>
+                        <span>Fri</span>
+                        <span>Sat</span>
+                        <span>Sun</span>
+                    </div>
+                </div>
+            </div>
+            <h2>Sell Order</h2>
+            <div class="table-header">
+                <h3></h3>
+                <div class="filters">
+                    <button>Filters</button>
+                </div>
+            </div>
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Price</th>
+                            <th>Amount</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>89.03</td>
+                            <td>0.15</td>
+                            <td>$126.00</td>
+                        </tr>
+                        <tr>
+                            <td>94.02</td>
+                            <td>0.18</td>
+                            <td>$126.00</td>
+                        </tr>
+                        <tr>
+                            <td>95.20</td>
+                            <td>0.26</td>
+                            <td>$176.00</td>
+                        </tr>
+                        <tr>
+                            <td>95.30</td>
+                            <td>0.31</td>
+                            <td>$226.00</td>
+                        </tr>
+                        <tr>
+                            <td>92.01</td>
+                            <td>0.35</td>
+                            <td>$2326.00</td>
+                        </tr>
+                        <tr>
+                            <td>97.34</td>
+                            <td>0.53</td>
+                            <td>$2243.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h2>Recent Activities</h2>
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><i class="fas fa-arrow-down"></i></td>
+                            <td>Bitcoin</td>
+                            <td>10:42:23 AM</td>
+                            <td>+1545.00</td>
+                            <td>Completed</td>
+                        </tr>
+                        <tr>
+                            <td><i class="fas fa-arrow-up"></i></td>
+                            <td>Bitcoin</td>
+                            <td>10:42:23 AM</td>
+                            <td>+1545.00</td>
+                            <td>Completed</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="footer">
+                &copy; 2023 Wallet. All rights reserved.
+            </div>
+        </div>
+    </div>
+</body>
+</html>
